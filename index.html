@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Language Upgrade OS 語言升維作業系統</title>
+<style>
+:root {
+  --navy:#1B2A4A; --gold:#C9A84C; --teal:#2E8B8B;
+  --white:#FFFFFF; --g50:#F5F7FA; --g100:#E8ECF0;
+  --g200:#C8D0DB; --g500:#6B7A90;
+  --r:12px; --sh:0 2px 12px rgba(27,42,74,.10);
+  --shl:0 8px 32px rgba(27,42,74,.16);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Microsoft JhengHei','PingFang TC',sans-serif;background:var(--white);color:var(--navy);min-height:100vh;}
+.hd{background:var(--navy);color:#fff;padding:22px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.hd-t{font-size:26px;font-weight:800;letter-spacing:1px;}
+.hd-t span{color:var(--gold);}
+.hd-s{font-size:13px;color:var(--g200);margin-top:3px;}
+.home{padding:36px 28px;}
+.hi{text-align:center;margin-bottom:36px;}
+.hi h2{font-size:28px;color:var(--navy);margin-bottom:8px;}
+.hi p{font-size:15px;color:var(--g500);}
+.flow-ban{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;padding:18px 28px;border-radius:var(--r);text-align:center;margin-bottom:36px;font-size:16px;font-weight:700;letter-spacing:1px;}
+.flow-ban .ar{color:var(--gold);margin:0 6px;}
+.flow-ban .sub{font-size:13px;font-weight:400;color:#a8c0d8;margin-top:6px;}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;}
+.mc{background:#fff;border:2px solid var(--g100);border-radius:var(--r);padding:22px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.mc::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--gold);}
+.mc:hover{border-color:var(--gold);box-shadow:var(--shl);transform:translateY(-2px);}
+.mc-num{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:2px;margin-bottom:6px;}
+.mc-zh{font-size:19px;font-weight:800;color:var(--navy);margin-bottom:3px;}
+.mc-en{font-size:12px;color:var(--teal);font-style:italic;margin-bottom:10px;}
+.mc-desc{font-size:13px;color:var(--g500);line-height:1.6;}
+.mc-tag{display:inline-block;margin-top:10px;padding:3px 10px;background:var(--g50);border-radius:20px;font-size:11px;color:var(--teal);font-weight:600;}
+.mc-tag.ai{background:#FFF3E0;color:#E65100;}
+.ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(27,42,74,.72);z-index:100;overflow-y:auto;}
+.ov.on{display:flex;justify-content:center;padding:36px 16px;}
+.panel{background:#fff;border-radius:16px;width:100%;max-width:880px;padding:36px;position:relative;height:fit-content;}
+.pcl{position:absolute;top:18px;right:20px;font-size:26px;cursor:pointer;color:var(--g500);background:none;border:none;line-height:1;}
+.ph{border-bottom:3px solid var(--gold);padding-bottom:18px;margin-bottom:24px;}
+.ph-num{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:3px;}
+.ph-zh{font-size:26px;font-weight:800;margin:5px 0 3px;}
+.ph-en{font-size:15px;color:var(--teal);font-style:italic;}
+.tts{display:inline-flex;align-items:center;gap:5px;background:var(--teal);color:#fff;border:none;padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;margin:5px 3px;transition:background .2s;font-family:inherit;}
+.tts:hover{background:#1a6b6b;}
+.tts.sp{background:var(--gold);color:var(--navy);}
+.ex-item{border:1px solid var(--g100);border-radius:10px;margin-bottom:9px;overflow:hidden;}
+.ex-hd{padding:13px 17px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:var(--g50);font-weight:700;font-size:14px;user-select:none;}
+.ex-hd:hover{background:var(--g100);}
+.ex-ar{transition:transform .2s;font-size:11px;color:var(--gold);}
+.ex-item.op .ex-ar{transform:rotate(90deg);}
+.ex-bd{display:none;padding:16px;border-top:1px solid var(--g100);}
+.ex-item.op .ex-bd{display:block;}
+.ai-box{background:var(--g50);border-radius:12px;padding:22px;margin-bottom:22px;}
+.ai-box label{display:block;font-weight:700;font-size:14px;margin-bottom:9px;}
+.ai-box textarea{width:100%;min-height:76px;padding:11px;border:2px solid var(--g100);border-radius:8px;font-size:14px;font-family:inherit;resize:vertical;}
+.ai-box textarea:focus{outline:none;border-color:var(--teal);}
+.ai-btn{margin-top:11px;background:var(--navy);color:#fff;border:none;padding:11px 26px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit;}
+.ai-btn:hover{background:var(--teal);}
+.ai-btn:disabled{background:var(--g200);cursor:not-allowed;}
+.ai-res{background:#fff;border:2px solid var(--teal);border-radius:12px;padding:22px;margin-top:18px;display:none;}
+.ai-res.on{display:block;}
+.ai-res h4{color:var(--teal);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
+.dots{display:inline-flex;gap:5px;}
+.dots span{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:bnc 1.2s infinite;}
+.dots span:nth-child(2){animation-delay:.2s;}
+.dots span:nth-child(3){animation-delay:.4s;}
+@keyframes bnc{0%,80%,100%{transform:scale(.6);opacity:.4;}40%{transform:scale(1);opacity:1;}}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+.dcell{background:var(--g50);border-radius:8px;padding:13px;}
+.dcell .lb{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+.dcell .vl{font-size:13px;line-height:1.6;}
+.bl-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
+.bl-lo{background:#FFE0E0;color:#C62828;padding:5px 13px;border-radius:20px;font-size:12px;}
+.bl-hi{background:#E0F4E0;color:#1B5E20;padding:5px 13px;border-radius:20px;font-size:12px;}
+.fcrd{background:var(--navy);color:#fff;border-radius:10px;padding:16px 20px;margin-bottom:9px;display:flex;align-items:flex-start;gap:14px;}
+.fm{font-size:17px;font-weight:800;color:var(--gold);white-space:nowrap;min-width:200px;}
+.fe{font-size:13px;line-height:1.7;color:#D0D9E8;}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:11px;margin-top:14px;}
+.cit{background:var(--g50);border-left:4px solid var(--teal);padding:13px 15px;border-radius:0 8px 8px 0;cursor:pointer;}
+.cit:hover{background:var(--g100);}
+.cit .cz{font-weight:700;font-size:14px;}
+.cit .ce{font-size:11px;color:var(--teal);margin-top:3px;}
+.cit .cd{display:none;font-size:12px;color:var(--g500);margin-top:7px;line-height:1.5;}
+.cit.op .cd{display:block;}
+.fst{display:flex;flex-direction:column;gap:0;}
+.fst-row{display:flex;align-items:flex-start;gap:14px;}
+.fst-line{display:flex;flex-direction:column;align-items:center;}
+.fdot{width:34px;height:34px;border-radius:50%;background:var(--gold);color:var(--navy);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fcon{width:2px;flex:1;min-height:18px;background:var(--g100);margin:3px 0;}
+.fcnt{padding-bottom:18px;flex:1;}
+.fcnt strong{color:var(--navy);font-size:15px;}
+.fcnt p{font-size:13px;color:var(--g500);margin-top:3px;line-height:1.6;}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px;margin-top:14px;}
+.wc{border-radius:10px;padding:16px;cursor:pointer;border:2px solid transparent;transition:all .2s;}
+.wc:hover{border-color:var(--gold);}
+.wc .wi{font-size:26px;margin-bottom:7px;}
+.wc .wz{font-size:15px;font-weight:800;}
+.wc .we{font-size:11px;font-style:italic;margin-top:2px;}
+.wc .wd{display:none;font-size:12px;margin-top:9px;line-height:1.7;}
+.wc.op .wd{display:block;}
+.lvl-list{display:flex;flex-direction:column;gap:9px;margin-top:14px;}
+.lv-item{display:flex;gap:11px;align-items:flex-start;cursor:pointer;}
+.lv-badge{min-width:46px;text-align:center;padding:5px 8px;border-radius:6px;font-size:12px;font-weight:700;}
+.lv-c{flex:1;}
+.lv-z{font-size:14px;font-weight:700;}
+.lv-e{font-size:12px;color:var(--teal);margin-top:2px;font-style:italic;}
+.lv-ex{display:none;font-size:12px;color:var(--g500);margin-top:7px;line-height:1.6;}
+.lv-item.op .lv-ex{display:block;}
+.dcrd{background:linear-gradient(135deg,var(--navy),#2A4080);color:#fff;border-radius:14px;padding:26px;margin-bottom:14px;}
+.dcrd .dl{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:11px;}
+.dcrd .dz{font-size:20px;font-weight:800;line-height:1.5;margin-bottom:8px;}
+.dcrd .de{font-size:14px;color:#A8C0D8;font-style:italic;line-height:1.5;}
+.sim-br{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px;}
+.sb{border-radius:12px;padding:20px;}
+.sb.old{background:#FFF0F0;border:2px solid #FFCDD2;}
+.sb.nw{background:#F0FFF4;border:2px solid #C8E6C9;}
+.sb h4{font-size:15px;font-weight:800;margin-bottom:13px;}
+.sb.old h4{color:#C62828;}
+.sb.nw h4{color:#1B5E20;}
+.sy{margin-bottom:11px;}
+.sy .sl{font-size:10px;font-weight:700;color:var(--g500);letter-spacing:2px;}
+.sy .st{font-size:13px;margin-top:3px;line-height:1.5;}
+.mgnd{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:11px;margin-top:14px;}
+.mn{background:var(--g50);border-radius:8px;padding:13px;border-left:4px solid var(--teal);}
+.mn .ml{font-size:10px;font-weight:700;color:var(--teal);letter-spacing:2px;margin-bottom:5px;}
+.mn .mz{font-size:14px;font-weight:700;}
+.mn .me{font-size:11px;color:var(--g500);margin-top:2px;}
+@media(max-width:640px){
+  .hd{padding:14px;}
+  .hd-t{font-size:20px;}
+  .home{padding:18px 14px;}
+  .panel{padding:22px 16px;}
+  .sim-br,.dgrid{grid-template-columns:1fr;}
+  .fcrd{flex-direction:column;}
+  .fm{min-width:unset;}
+}
+</style>
+</head>
+<body>
+<div class="hd">
+  <div>
+    <div class="hd-t">Language <span>Upgrade</span> OS&nbsp;&nbsp;語言升維<span>作業系統</span></div>
+    <div class="hd-s">語言 → 大腦模型 → 預測 → 決策 → 行動 → 人生結果&nbsp;&nbsp;|&nbsp;&nbsp;王欣蓉編制</div>
+  </div>
+  <button class="tts" onclick="speak('Language Upgrade OS — Transform your language, upgrade your brain model, and elevate your life results.',this,'INTRO')">🔊 INTRO</button>
+</div>
+
+<div class="home">
+  <div class="hi">
+    <h2>17 核心認知模組</h2>
+    <p>點擊任一模組卡片，開啟深度內容&nbsp;&nbsp;Click any module card to explore</p>
+  </div>
+  <div class="flow-ban">
+    語言<span class="ar">→</span>大腦模型<span class="ar">→</span>預測模型<span class="ar">→</span>決策模型<span class="ar">→</span>行為模型<span class="ar">→</span>人生結果
+    <div class="sub">Language → Brain Model → Prediction → Decision → Action → Life Results</div>
+  </div>
+  <div class="mgrid" id="mgrid"></div>
+</div>
+
+<div class="ov" id="ov">
+  <div class="panel" id="panel">
+    <button class="pcl" onclick="closeP()">✕</button>
+    <div class="ph">
+      <div class="ph-num" id="pn"></div>
+      <div class="ph-zh" id="pz"></div>
+      <div class="ph-en" id="pe"></div>
+    </div>
+    <div id="pc"></div>
+  </div>
+</div>
+
+<script>
+// ── TTS ──────────────────────────────────────────────────────────
+let spkBtn=null;
+function speak(txt,btn,lbl){
+  speechSynthesis.cancel();
+  if(spkBtn){spkBtn.classList.remove('sp');spkBtn.innerHTML='🔊 '+(spkBtn.dataset.l||'SPEAK');spkBtn=null;}
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang='en-US';u.rate=0.88;
+  const vs=speechSynthesis.getVoices();
+  const v=vs.find(x=>x.lang.startsWith('en')&&x.name.includes('Samantha'))||vs.find(x=>x.lang.startsWith('en')&&x.localService);
+  if(v)u.voice=v;
+  if(btn){spkBtn=btn;btn.classList.add('sp');btn.dataset.l=lbl||'SPEAK';btn.innerHTML='⏸ STOP';}
+  u.onend=()=>{if(btn){btn.classList.remove('sp');btn.innerHTML='🔊 '+(lbl||'SPEAK');spkBtn=null;}};
+  speechSynthesis.speak(u);
+}
+if(speechSynthesis.onvoiceschanged!==undefined)speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
+
+// ── MODULES META ─────────────────────────────────────────────────
+const MODS=[
+  {id:1,zh:'語言掃描引擎',en:'Language Scanner Engine',desc:'掃描任何一句話，分析背後的大腦模型10維度',tag:'🤖 AI驅動',ai:true},
+  {id:2,zh:'世界模型辨識',en:'World Model Identifier',desc:'判斷語言來自哪一種世界模型，共10種',tag:'📚 知識庫'},
+  {id:3,zh:'限制信念資料庫',en:'Limiting Beliefs Database',desc:'限制信念 vs 更新信念精選對照庫',tag:'📊 資料庫'},
+  {id:4,zh:'預測模型分析',en:'Predictive Model Analysis',desc:'AI分析你正在預測什麼、害怕什麼',tag:'🤖 AI驅動',ai:true},
+  {id:5,zh:'語言生成器',en:'Language Level Generator',desc:'同一意思，11種不同維度的語言版本',tag:'⚡ 互動'},
+  {id:6,zh:'人生診斷流程',en:'Life Diagnosis Flow',desc:'一句話 → 9階段AI深度診斷',tag:'🤖 AI驅動',ai:true},
+  {id:7,zh:'模型壓縮器',en:'Model Compressor',desc:'任何文章/書籍 → 第一性原理精華',tag:'🤖 AI驅動',ai:true},
+  {id:8,zh:'模型遷移',en:'Model Transfer Engine',desc:'同一模型套用到所有人生領域',tag:'🔄 遷移'},
+  {id:9,zh:'人生模擬器',en:'Life Simulator',desc:'維持舊模型 vs 更新模型的未來對比',tag:'🎯 模擬'},
+  {id:10,zh:'高維語言資料庫',en:'High-Dim Language Database',desc:'低維語言 vs 高維語言精選對照',tag:'📖 資料庫'},
+  {id:11,zh:'智慧公式庫',en:'Wisdom Formula Library',desc:'人生核心方程式，精確白話解釋',tag:'🧮 公式'},
+  {id:12,zh:'能力樹',en:'Capability Tree',desc:'10大核心能力 + 每項訓練方法',tag:'🌳 能力'},
+  {id:13,zh:'每日升維',en:'Daily Upgrade',desc:'每日一套完整認知升級練習',tag:'📅 每日'},
+  {id:14,zh:'人生知識圖譜',en:'Life Knowledge Graph',desc:'所有人生概念相互連結的知識網路',tag:'🕸 圖譜'},
+  {id:15,zh:'知道→能力轉化',en:'Knowledge → Ability Ladder',desc:'10步把知識變成真正的能力',tag:'🪜 轉化'},
+  {id:16,zh:'證據與推理模式',en:'Evidence & Reasoning Mode',desc:'區分事實、推論、假設、價值判斷',tag:'🔍 推理'},
+  {id:17,zh:'語言顯微鏡',en:'Language Microscope',desc:'把一句話拆解成50個認知節點',tag:'🤖 AI驅動',ai:true},
+];
+
+function renderGrid(){
+  document.getElementById('mgrid').innerHTML=MODS.map(m=>`
+    <div class="mc" onclick="openM(${m.id})">
+      <div class="mc-num">MODULE ${String(m.id).padStart(2,'0')}</div>
+      <div class="mc-zh">${m.zh}</div>
+      <div class="mc-en">${m.en}</div>
+      <div class="mc-desc">${m.desc}</div>
+      <span class="mc-tag${m.ai?' ai':''}">${m.tag}</span>
+    </div>`).join('');
+}
+
+function openM(id){
+  const m=MODS.find(x=>x.id===id);
+  document.getElementById('pn').textContent=`MODULE ${String(id).padStart(2,'0')}`;
+  document.getElementById('pz').textContent=m.zh;
+  document.getElementById('pe').textContent=m.en;
+  document.getElementById('pc').innerHTML=buildC(id);
+  document.getElementById('ov').classList.add('on');
+  document.body.style.overflow='hidden';
+}
+function closeP(){speechSynthesis.cancel();document.getElementById('ov').classList.remove('on');document.body.style.overflow='';}
+document.getElementById('ov').addEventListener('click',e=>{if(e.target===document.getElementById('ov'))closeP();});
+
+function tog(el){el.closest('.ex-item').classList.toggle('op');}
+function togC(el){el.classList.toggle('op');}
+
+// ── AI CALL ──────────────────────────────────────────────────────
+async function aiCall(sys,msg,rid,ldg){
+  const el=document.getElementById(rid);
+  el.classList.add('on');
+  el.innerHTML=`<h4>${ldg}</h4><div class="dots"><span></span><span></span><span></span></div>`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:sys,messages:[{role:'user',content:msg}]})
+    });
+    const d=await r.json();
+    const t=d.content?.map(c=>c.text||'').join('')||'請再試一次。';
+    const safe=t.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    el.innerHTML=`<h4>✨ 分析完成 ANALYSIS COMPLETE</h4>
+      <div style="line-height:1.9;font-size:13px;white-space:pre-wrap;">${safe}</div>
+      <button class="tts" style="margin-top:14px;" onclick="speak(this.dataset.t,this,'READ')" data-t="${t.replace(/"/g,'&quot;').replace(/\n/g,' ')}">🔊 READ ALOUD</button>`;
+  }catch(e){el.innerHTML=`<h4>⚠️ 錯誤</h4><p>網路錯誤，請再試。${e.message}</p>`;}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MODULE BUILDERS
+// ══════════════════════════════════════════════════════════════════
+function buildC(id){
+  const B={1:m1,2:m2,3:m3,4:m4,5:m5,6:m6,7:m7,8:m8,9:m9,10:m10,11:m11,12:m12,13:m13,14:m14,15:m15,16:m16,17:m17};
+  return B[id]?B[id]():'<p>Coming soon.</p>';
+}
+
+// ── M1 Language Scanner ──────────────────────────────────────────
+function m1(){
+  const dims=[
+    ['情緒 Emotion','The emotional signal encoded in the sentence — what feeling is being expressed or suppressed?'],
+    ['身份 Identity','What identity does this sentence assume, reinforce, or threaten?'],
+    ['需求 Need','What core human need is being expressed, suppressed, or denied?'],
+    ['恐懼 Fear','What fear is driving the language? What outcome is being avoided?'],
+    ['限制信念 Limiting Belief','What belief is capping the speaker\'s possibilities and options?'],
+    ['預測模型 Prediction','What specific future is this sentence predicting? What outcome is expected?'],
+    ['價值排序 Values','What does the word choice reveal about the speaker\'s deepest priorities?'],
+    ['注意力焦點 Attention','Where is attention directed — problem or solution? Past or future?'],
+    ['控制點 Locus of Control','Does the speaker believe they are the cause, or the effect, of their situation?'],
+    ['世界模型 World Model','What kind of world does this sentence reveal — victim, growth, creation, fear?'],
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">APP不是分析句子，而是分析句子背後的大腦。<br><em>Not analyzing sentences — analyzing the brain that produced them.</em></p>
+  <div class="ai-box">
+    <label>輸入任何一句話 / Enter any sentence:</label>
+    <textarea id="m1i" placeholder="例：我沒辦法，我就是這樣的人。"></textarea>
+    <button class="ai-btn" onclick="rm1()">🔬 掃描語言 SCAN</button>
+  </div>
+  <div class="ai-res" id="m1r"></div>
+  <h3 style="margin:24px 0 13px;color:var(--navy);">10個掃描維度</h3>
+  ${dims.map(([z,e])=>`<div class="ex-item"><div class="ex-hd" onclick="tog(this)"><span>${z}</span><span class="ex-ar">▶</span></div>
+    <div class="ex-bd"><button class="tts" onclick="speak('${e.replace(/'/g,"\\'")}',this,'PLAY')">🔊 PLAY</button>
+    <p style="font-size:13px;color:var(--g500);margin-top:9px;line-height:1.7;">${e}</p></div></div>`).join('')}`;
+}
+function rm1(){const v=document.getElementById('m1i').value.trim();if(!v)return alert('請輸入一句話');
+  aiCall(`You are a Language Upgrade OS cognitive analyst. Analyze the sentence through 10 dimensions with ▶ before each name. For each: label in Chinese+English, 2-3 sentences analysis in Traditional Chinese, one English insight. Dimensions: Emotion, Identity, Need, Fear, Limiting Belief, Prediction, Values, Attention, Locus of Control, World Model.`,`分析：「${v}」`,'m1r','🔬 掃描中 SCANNING...');}
+
+// ── M2 World Models ──────────────────────────────────────────────
+function m2(){
+  const W=[
+    {i:'😢',z:'受害者模型',e:'Victim Model',c:'#FFEBEE',
+     d:'相信世界對自己不公平，能量花在抱怨與責怪。\n\nLanguage markers: "Why me?", "It\'s not my fault", "Life is unfair to me." The world happens TO you — you are its object, never its author.'},
+    {i:'⚔️',z:'競爭模型',e:'Competition Model',c:'#FFF3E0',
+     d:'相信世界是零和遊戲，贏要靠別人輸。\n\nLanguage markers: "Beat the competition", "Stay ahead", "Win at all costs." The world is a battlefield with finite resources.'},
+    {i:'🌱',z:'成長模型',e:'Growth Model',c:'#E8F5E9',
+     d:'相信能力可以培養，失敗是回饋信號。\n\nLanguage markers: "I\'m still learning", "Failure is data", "How can I improve?" The world is a training ground.'},
+    {i:'🤝',z:'合作模型',e:'Cooperation Model',c:'#E3F2FD',
+     d:'相信合作創造比競爭更大的價值。\n\nLanguage markers: "Let\'s do this together", "Win-win", "Your success helps mine." The world expands through collaboration.'},
+    {i:'🎮',z:'控制模型',e:'Control Model',c:'#F3E5F5',
+     d:'需要掌控所有事情，不確定性引發焦慮。\n\nLanguage markers: "It must go my way", "I need a plan", "Uncertainty is dangerous." Safety comes from control.'},
+    {i:'😨',z:'恐懼模型',e:'Fear Model',c:'#ECEFF1',
+     d:'以避免損失為核心動力，每個決策先想最壞情況。\n\nLanguage markers: "I can\'t fail", "What if it goes wrong?", "Better not risk it." Every action is filtered through fear of loss.'},
+    {i:'✨',z:'創造模型',e:'Creation Model',c:'#E8EAF6',
+     d:'相信自己能創造不存在的現實，從無到有。\n\nLanguage markers: "Let me build this", "From zero to one", "What does the world need that doesn\'t exist yet?"'},
+    {i:'🌐',z:'系統模型',e:'Systems Model',c:'#E0F7FA',
+     d:'看到所有事物的相互連結與回饋迴路。\n\nLanguage markers: "What\'s the underlying pattern?", "What are the second-order effects?", "How does the whole system work?"'},
+    {i:'⚛️',z:'第一性原理',e:'First Principles Model',c:'#F9FBE7',
+     d:'回到最基本的真理，從不可簡化的事實推導。\n\nLanguage markers: "What is fundamentally true here?", "If I reason from scratch...", "What are the irreducible facts?"'},
+    {i:'🔗',z:'依附模型',e:'Attachment Model',c:'#FCE4EC',
+     d:'需要他人認可才能行動，身份依附於他人評價。\n\nLanguage markers: "What will people think?", "I need approval before I act", "If they don\'t support me, I can\'t."'},
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">每一句話都揭示說話者的世界模型。點擊卡片展開。<br><em>Every sentence reveals the speaker\'s world model. Click to expand.</em>
+  <button class="tts" onclick="speak('Every sentence reveals the world model of the person who said it. There are ten world models. Recognizing which model is operating is the first step to upgrading it.',this,'INTRO')">🔊 INTRO</button></p>
+  <div class="wgrid">${W.map(w=>`
+    <div class="wc" style="background:${w.c};" onclick="togC(this)">
+      <div class="wi">${w.i}</div><div class="wz">${w.z}</div><div class="we">${w.e}</div>
+      <div class="wd"><p style="white-space:pre-line;font-size:12px;line-height:1.7;color:#37474F;">${w.d}</p>
+      <button class="tts" style="margin-top:9px;" onclick="event.stopPropagation();speak('${w.e}. ${w.d.split('\n\n')[1]?.replace(/'/g,"\\'")||''}',this,'${w.e}')">🔊 ${w.e}</button></div>
+    </div>`).join('')}</div>`;
+}
+
+// ── M3 Limiting Beliefs ──────────────────────────────────────────
+function m3(){
+  const C=[
+    {z:'身份限制 Identity',e:'Identity Limits',
+     lo:['我就是這種人','我天生不適合','我改變不了','我不是那塊料','我沒有那種特質'],
+     hi:['我是持續進化的人','我的身份是我創造的','我可以培養任何特質','我是學習中的版本','我選擇我的身份'],
+     en:'Identity limiting beliefs: I am just this kind of person. Upgraded: My identity is something I create, not something fixed in me.'},
+    {z:'金錢限制 Money',e:'Money Limits',
+     lo:['有錢人都不是好人','我沒有賺錢的命','金錢是萬惡之源','我不適合談錢','富人剝削窮人'],
+     hi:['金錢是價值的流動','我創造價值金錢自然流入','財富是服務他人的工具','我值得繁榮','富裕讓我幫助更多人'],
+     en:'Money limiting beliefs updated: Money is the flow of value I create. Wealth is a tool for serving more people.'},
+    {z:'健康限制 Health',e:'Health Limits',
+     lo:['我家族有這個病','老了就是這樣','我無法改變體質','我沒時間運動','健康是奢侈品'],
+     hi:['我的身體有強大自癒力','每個選擇都在建造健康','基因是起點不是終點','今天的習慣是明天的健康','我優先照顧自己'],
+     en:'Health upgraded belief: My body has powerful self-healing capacity. My genes are a starting point, not a destination.'},
+    {z:'教育限制 Education',e:'Education Limits',
+     lo:['我沒念書所以不行','我學歷不夠','我太老學不來','我不聰明','學了也沒用'],
+     hi:['學習是終身能力','任何年齡都可以學習','聰明是可訓練的','知識是可遷移的工具','我每天更新我的系統'],
+     en:'Education upgraded: Learning is a lifelong capability. Intelligence is trainable. I update my system every day.'},
+    {z:'婚姻限制 Relationship',e:'Relationship Limits',
+     lo:['感情就是這樣','對方不會改變','婚姻都是這樣的','愛不可能長久','我選的人都這樣'],
+     hi:['關係是雙方共同創造的','溝通模式可以更新','我可以學習更好的愛','我選擇有意識的關係','成熟的愛越來越深'],
+     en:'Relationship upgraded: Relationships are co-created. Communication patterns can be updated. Mature love deepens with time.'},
+    {z:'價值限制 Self-Worth',e:'Self-Worth Limits',
+     lo:['我的時間不值錢','我不夠專業','我沒有獨特的東西','別人比我強太多','我沒資格要求'],
+     hi:['我的獨特經歷無可取代','我的視角有其價值','我在成長中創造更大價值','我值得被好好對待','我的貢獻是真實的'],
+     en:'Self-worth upgraded: My unique experiences are irreplaceable. My perspective has value. I deserve to be treated well.'},
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">點擊類別查看限制信念 vs 更新信念對照。<br>
+    <em>Click each category to compare limiting vs upgraded beliefs.</em>
+    <button class="tts" onclick="speak('Limiting beliefs are the invisible cage imprisoning our potential. Every limiting belief has an upgraded version — a new model that opens possibilities instead of closing them.',this,'INTRO')">🔊 INTRO</button></p>
+  ${C.map(c=>`<div class="ex-item">
+    <div class="ex-hd" onclick="tog(this)"><span>${c.z}</span><span class="ex-ar">▶</span></div>
+    <div class="ex-bd">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div><div style="font-weight:700;color:#C62828;margin-bottom:8px;font-size:12px;">⛓ 限制信念</div>
+          <div class="bl-list">${c.lo.map(b=>`<span class="bl-lo">${b}</span>`).join('')}</div></div>
+        <div><div style="font-weight:700;color:#1B5E20;margin-bottom:8px;font-size:12px;">🚀 更新信念</div>
+          <div class="bl-list">${c.hi.map(b=>`<span class="bl-hi">${b}</span>`).join('')}</div></div>
+      </div>
+      <button class="tts" style="margin-top:12px;" onclick="speak('${c.en.replace(/'/g,"\\'")}',this,'${c.e}')">🔊 ${c.e}</button>
+    </div></div>`).join('')}`;
+}
+
+// ── M4 Predictive Model ──────────────────────────────────────────
+function m4(){
+  const D=[
+    ['我正在預測什麼？','What am I predicting?','The specific expectation embedded in this sentence. What outcome does your brain consider most likely?'],
+    ['我害怕什麼？','What am I afraid of?','The feared outcome driving the sentence. What loss or threat is the brain trying to prevent?'],
+    ['哪些證據支持？','What evidence supports it?','What real data or past experience is your brain using to justify this prediction?'],
+    ['哪些證據反駁？','What contradicts it?','What counter-evidence is being ignored or minimized? What exceptions exist to this prediction?'],
+    ['哪些假設是錯的？','What assumptions are false?','What hidden premises may not be true? What is being assumed without verification?'],
+    ['如何重建預測？','How to rebuild the prediction?','What would a more accurate, high-agency prediction look like? How do you upgrade the model?'],
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">情緒 ＝ 預測誤差。焦慮 ＝ 不確定性增加。<br>
+    <em>Emotion = Prediction Error. Anxiety = Increased Uncertainty. Your brain is a prediction machine.</em>
+    <button class="tts" onclick="speak('Emotion equals prediction error. When reality matches your prediction you feel calm. When it does not you feel emotion. Anxiety equals increased uncertainty in your predictive system. Every strong emotion is an invitation to update your model.',this,'INTRO')">🔊 INTRO</button></p>
+  <div class="ai-box">
+    <label>輸入你常說或常想的一句話 / Enter a sentence you often say or think:</label>
+    <textarea id="m4i" placeholder="例：我不確定這樣做對不對。"></textarea>
+    <button class="ai-btn" onclick="rm4()">🔮 分析預測模型 ANALYZE</button>
+  </div>
+  <div class="ai-res" id="m4r"></div>
+  <h3 style="margin:24px 0 13px;color:var(--navy);">六個分析維度</h3>
+  ${D.map(([z,e,d])=>`<div class="ex-item"><div class="ex-hd" onclick="tog(this)"><span>${z}</span><span class="ex-ar">▶</span></div>
+    <div class="ex-bd"><button class="tts" onclick="speak('${e}. ${d.replace(/'/g,"\\'")}',this,'PLAY')">🔊 PLAY</button>
+    <p style="font-style:italic;color:var(--teal);margin:7px 0 3px;font-size:13px;">${e}</p>
+    <p style="font-size:13px;color:var(--g500);line-height:1.7;">${d}</p></div></div>`).join('')}`;
+}
+function rm4(){const v=document.getElementById('m4i').value.trim();if(!v)return alert('請輸入');
+  aiCall(`Language Upgrade OS predictive analyst. Analyze through 6 dimensions in Traditional Chinese: 1.我正在預測什麼 2.我害怕什麼 3.支持證據 4.反駁證據 5.錯誤假設 6.重建預測. End with one powerful English upgraded prediction sentence.`,`分析：「${v}」`,'m4r','🔮 分析中...');}
+
+// ── M5 Language Generator ────────────────────────────────────────
+function m5(){
+  const L=[
+    {z:'受害者版本',e:'Victim Version',bg:'#FFCDD2',tc:'#C62828',
+     zh:'為什麼倒楣的都是我？我已經很努力了還是這樣。',en:"Why does everything happen to me? I try so hard and nothing works."},
+    {z:'情緒版本',e:'Emotional Version',bg:'#FFE0B2',tc:'#E65100',
+     zh:'我覺得很挫折，這不公平，我感覺很失落。',en:"I feel so frustrated. This isn't fair. I feel completely defeated."},
+    {z:'事實版本',e:'Factual Version',bg:'#F5F5F5',tc:'#424242',
+     zh:'我採取了行動A，得到了結果B，兩者之間有什麼關係。',en:"I took action A and got result B. Let me examine the causal connection."},
+    {z:'第一性原理版本',e:'First Principles Version',bg:'#E8EAF6',tc:'#1A237E',
+     zh:'這個問題最根本的原因是什麼？從最基礎的事實推導。',en:"What is the most fundamental cause here? Let me reason from irreducible facts upward."},
+    {z:'系統論版本',e:'Systems Version',bg:'#E0F7FA',tc:'#006064',
+     zh:'這個事件在整個系統中的位置是什麼？它影響了哪些回饋迴路？',en:"Where does this event sit in the larger system? What feedback loops does it activate?"},
+    {z:'控制論版本',e:'Cybernetics Version',bg:'#E8F5E9',tc:'#1B5E20',
+     zh:'偏差是多少？回饋信號是什麼？如何調整我的控制器？',en:"What is the deviation from target? What is the feedback signal? How do I recalibrate the controller?"},
+    {z:'高Agency版本',e:'High Agency Version',bg:'#FFF8E1',tc:'#F57F17',
+     zh:'我可以控制的變數是什麼？下一步最高槓桿的行動是什麼？',en:"What variables can I control? What is the single highest-leverage action I can take right now?"},
+    {z:'創業版本',e:'Entrepreneur Version',bg:'#FBE9E7',tc:'#BF360C',
+     zh:'市場給了我什麼信號？如何把這個問題轉化為機會？',en:"What signal is the market sending me? How can I turn this problem into a scalable opportunity?"},
+    {z:'教育版本',e:'Educational Version',bg:'#E3F2FD',tc:'#0D47A1',
+     zh:'這個情況教了我什麼？我可以從中提煉什麼可遷移的智慧？',en:"What is this situation teaching me? What transferable wisdom can I extract and apply elsewhere?"},
+    {z:'醫學版本',e:'Medical Version',bg:'#F3E5F5',tc:'#4A148C',
+     zh:'症狀是什麼？根本病因是什麼？介入方案是什麼？預後是什麼？',en:"What are the symptoms? What is the root etiology? What is the intervention protocol? What is the prognosis?"},
+    {z:'AI版本',e:'AI Version',bg:'#E0F2F1',tc:'#004D40',
+     zh:'輸入數據是什麼？模型假設是什麼？如何更新權重？如何最優化輸出？',en:"What is the input data? What are the model assumptions? How do I update the weights? How do I optimize the output?"},
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">同一件事，11種不同維度的語言。點擊展開並收聽英文版。<br>
+    <em>The same situation expressed in 11 cognitive dimensions. Click to expand and listen.</em>
+    <button class="tts" onclick="speak('The same situation can be expressed in eleven completely different cognitive dimensions. Each version reveals a different mental model, a different level of agency, and a different space of possible actions.',this,'INTRO')">🔊 INTRO</button></p>
+  <div class="lvl-list">${L.map((l,i)=>`
+    <div class="lv-item" onclick="togC(this)">
+      <div class="lv-badge" style="background:${l.bg};color:${l.tc};">L${i+1}</div>
+      <div class="lv-c">
+        <div class="lv-z">${l.z}</div><div class="lv-e">${l.e}</div>
+        <div class="lv-ex">
+          <div style="background:#F5F7FA;padding:11px;border-radius:8px;margin-bottom:7px;">
+            <strong style="font-size:11px;color:var(--navy);">中文範例：</strong>
+            <p style="margin-top:3px;font-size:13px;">${l.zh}</p>
+          </div>
+          <div style="background:#E8F5E9;padding:11px;border-radius:8px;">
+            <strong style="font-size:11px;color:var(--teal);">English example:</strong>
+            <p style="margin-top:3px;font-size:13px;font-style:italic;">${l.en}</p>
+            <button class="tts" style="margin-top:7px;" onclick="event.stopPropagation();speak('${l.e}: ${l.en.replace(/'/g,"\\'")}',this,'${l.e}')">🔊 ${l.e}</button>
+          </div>
+        </div>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+// ── M6 Life Diagnosis ────────────────────────────────────────────
+function m6(){
+  const S=[
+    {n:'01',z:'一句話',e:'The Sentence',d:'輸入你想分析的話 / The sentence to analyze'},
+    {n:'02',z:'情緒',e:'Emotion',d:'這句話裡藏著什麼情緒 / What emotion is hidden in this sentence?'},
+    {n:'03',z:'需求',e:'Need',d:'情緒背後有什麼未被滿足的需求 / What unmet need drives this emotion?'},
+    {n:'04',z:'信念',e:'Belief',d:'這個需求背後是什麼信念在驅動 / What belief is producing this need?'},
+    {n:'05',z:'預測',e:'Prediction',d:'這個信念讓你預測什麼未來 / What future is this belief predicting?'},
+    {n:'06',z:'世界模型',e:'World Model',d:'你的預測來自哪種世界模型 / Which world model is generating this prediction?'},
+    {n:'07',z:'系統瓶頸',e:'Bottleneck',d:'整個系統中最大的阻礙在哪裡 / Where is the biggest bottleneck?'},
+    {n:'08',z:'最大槓桿',e:'Highest Leverage',d:'一個改變可以撬動最多的支點 / The single highest-leverage intervention'},
+    {n:'09',z:'今日任務',e:"Today's Action",d:'今天可以採取的一個具體行動 / One concrete action you can take today'},
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">一句話可以揭示整個人生系統的問題。AI帶你走過9個診斷階段。<br>
+    <em>One sentence can reveal the entire system problem. AI guides you through 9 diagnostic stages.</em></p>
+  <div class="ai-box">
+    <label>輸入你最近常說、常想、或讓你困擾的一句話:</label>
+    <textarea id="m6i" placeholder="例：我每天都很累但不知道為什麼。"></textarea>
+    <button class="ai-btn" onclick="rm6()">🩺 開始診斷 START DIAGNOSIS</button>
+  </div>
+  <div class="ai-res" id="m6r"></div>
+  <h3 style="margin:24px 0 13px;color:var(--navy);">9階段診斷流程</h3>
+  <div class="fst">${S.map((s,i)=>`
+    <div class="fst-row">
+      <div class="fst-line"><div class="fdot">${s.n}</div>${i<S.length-1?'<div class="fcon"></div>':''}</div>
+      <div class="fcnt">
+        <strong>${s.z} <span style="color:var(--teal);font-size:13px;font-weight:400;font-style:italic;">${s.e}</span></strong>
+        <p>${s.d}</p>
+        <button class="tts" style="margin-top:5px;" onclick="speak('Stage ${s.n}: ${s.e}. ${s.d.split(' / ')[1]||''}',this,'S${s.n}')">🔊 STAGE ${s.n}</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+function rm6(){const v=document.getElementById('m6i').value.trim();if(!v)return alert('請輸入');
+  aiCall(`Life Diagnosis AI. Guide through 9 stages in Traditional Chinese. Label each stage clearly. End with: "💡 ENGLISH INSIGHT: [2-3 sentences]". Be compassionate and practical.
+Stages: 1.句子分析 2.情緒 3.需求 4.信念 5.預測 6.世界模型 7.系統瓶頸 8.最大槓桿 9.今日任務`,`診斷：「${v}」`,'m6r','🩺 診斷中 DIAGNOSING...');}
+
+// ── M7 Model Compressor ──────────────────────────────────────────
+function m7(){
+  const F=[
+    ['一句話精華','One-Sentence Core','The entire content compressed into the single most important sentence'],
+    ['三句話理解','Three-Sentence Understanding','The three sentences that contain 80% of the value'],
+    ['十句智慧','Ten Wisdom Sentences','Ten actionable insights extracted and distilled'],
+    ['世界模型','World Model Revealed','What world model does this content operate from?'],
+    ['第一性原理','First Principles','What irreducible truths is this content built on?'],
+    ['可遷移洞見','Transferable Insights','What can be applied to health, wealth, relationships, education?'],
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">任何文章、書籍 → 自動提煉第一性原理精華。<br>
+    <em>Any article or book → automatically compressed to first-principles essence.</em>
+    <button class="tts" onclick="speak('Any article, book, or speech can be compressed into its essential first principles. This module extracts the core model and the transferable wisdom — so you own the knowledge, not just the words.',this,'INTRO')">🔊 INTRO</button></p>
+  <div class="ai-box">
+    <label>貼入任何文字（文章/段落/金句）/ Paste any text:</label>
+    <textarea id="m7i" style="min-height:140px;" placeholder="貼入文章或段落..."></textarea>
+    <button class="ai-btn" onclick="rm7()">⚗️ 提煉精華 COMPRESS</button>
+  </div>
+  <div class="ai-res" id="m7r"></div>
+  <h3 style="margin:24px 0 13px;color:var(--navy);">壓縮輸出格式</h3>
+  ${F.map(([z,e,d])=>`<div class="ex-item"><div class="ex-hd" onclick="tog(this)"><span>${z}</span><span class="ex-ar">▶</span></div>
+    <div class="ex-bd"><button class="tts" onclick="speak('${e}. ${d.replace(/'/g,"\\'")}',this,'PLAY')">🔊 PLAY</button>
+    <p style="font-style:italic;color:var(--teal);margin:7px 0 3px;font-size:13px;">${e}</p>
+    <p style="font-size:13px;color:var(--g500);line-height:1.7;">${d}</p></div></div>`).join('')}`;
+}
+function rm7(){const v=document.getElementById('m7i').value.trim();if(!v)return alert('請貼入文字');
+  aiCall(`Model Compressor. Compress input into: 1.🎯一句話精華 2.📖三句話理解 3.💎十句智慧(numbered) 4.🌐世界模型 5.⚛️第一性原理 6.🔄可遷移洞見 7.💡ENGLISH CORE INSIGHT(1-2 powerful sentences). Traditional Chinese except the English section. Be precise, not verbose.`,v,'m7r','⚗️ 提煉中 COMPRESSING...');}
+
+// ── M8 Model Transfer ────────────────────────────────────────────
+function m8(){
+  const D=[
+    {i:'💪',z:'健康',e:'Health',ex:'成長模型在健康上：我的身體是可以訓練改善的，症狀是回饋信號，不是命運。\n\nGrowth model in health: My body is trainable. Symptoms are feedback signals, not fate. Every lifestyle choice is a vote for a future health state.'},
+    {i:'📚',z:'教育',e:'Education',ex:'系統模型在教育上：學習不只是輸入知識，而是建立可遷移的模型，讓知識相互連結。\n\nSystems model in education: Learning is not inputting facts — it is building transferable models where knowledge interconnects and compounds.'},
+    {i:'💍',z:'婚姻',e:'Marriage',ex:'合作模型在婚姻上：婚姻不是兩人競爭，而是共同建造一個更大的系統。\n\nCooperation model in marriage: Marriage is not two people competing — it is two people co-creating a system greater than either alone.'},
+    {i:'👨‍👩‍👧',z:'育兒',e:'Parenting',ex:'第一性原理在育兒上：孩子需要的不是完美父母，而是能自我更新的父母模型。\n\nFirst principles in parenting: Children don\'t need perfect parents. They need parents with an upgradeable model — one that updates when the data changes.'},
+    {i:'🔤',z:'英文學習',e:'English Learning',ex:'成長模型在英文上：語言是肌肉，不是天份。每天使用就在建造神經連結。\n\nGrowth model in English: Language is a muscle, not a talent. Every day of deliberate use builds neural connections that compound over time.'},
+    {i:'🚀',z:'創業',e:'Entrepreneurship',ex:'創造模型在創業上：市場問題是系統缺口，找到最小介入讓系統自運作。\n\nCreation model in entrepreneurship: Market problems are system gaps. Your role is the minimum intervention that makes the system self-sustaining.'},
+    {i:'📈',z:'投資',e:'Investment',ex:'系統模型在投資上：價格是信息，不是真相。理解系統才能在混亂中找到訊號。\n\nSystems model in investment: Price is information, not truth. Understanding the system lets you find signal in market noise.'},
+    {i:'🤖',z:'AI應用',e:'AI Application',ex:'第一性原理在AI上：AI是預測機器，人的優勢在提出更好的問題，不是更快的計算。\n\nFirst principles in AI: AI is a prediction machine. Human advantage lies in asking better questions, not in faster computation.'},
+    {i:'✨',z:'信仰意義',e:'Faith & Meaning',ex:'創造模型在信仰上：意義不是被賦予的，是被創造的。每一個行動都是意義的聲明。\n\nCreation model in meaning: Meaning is not given — it is created. Every action is a declaration of what you stand for.'},
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">同一個高維模型，可以遷移到所有人生領域。點擊展開。<br>
+    <em>The same high-dimensional model transfers to every domain of life. Click to expand.</em>
+    <button class="tts" onclick="speak('The most powerful insight about mental models is their transferability. A growth model learned in fitness transfers to language learning. A systems model learned in investment transfers to health. Models are the universal currency of wisdom.',this,'INTRO')">🔊 INTRO</button></p>
+  <div class="wgrid">${D.map(d=>`
+    <div class="wc" style="background:var(--g50);" onclick="togC(this)">
+      <div class="wi">${d.i}</div><div class="wz">${d.z}</div><div class="we">${d.e}</div>
+      <div class="wd"><p style="white-space:pre-line;font-size:12px;line-height:1.8;color:#37474F;">${d.ex}</p>
+      <button class="tts" style="margin-top:9px;" onclick="event.stopPropagation();speak('${d.e}. ${d.ex.split('\n\n')[1]?.replace(/'/g,"\\'")||''}',this,'${d.e}')">🔊 ${d.e}</button></div>
+    </div>`).join('')}</div>`;
+}
+
+// ── M9 Life Simulator ────────────────────────────────────────────
+function m9(){
+  const SC=[
+    {t:'受害者模型 → 成長模型',e:'Victim → Growth',
+     old:{y1:'繼續抱怨環境、責怪他人，能量消耗在無效抱怨，進展停滯。',y3:'關係惡化、機會流失，形成更深的受害者認同。',y10:'人生被相同的劇本重複，原地踏步，自我實現的悲劇。'},
+     nw:{y1:'開始把挑戰視為信號，每次挫折成為系統更新的觸發點。',y3:'建立了自我更新的習慣，複利效應開始顯現，機會增多。',y10:'成為能幫助他人的人，人生系統持續升級，影響力不斷擴大。'},
+     en:'Year 1: Challenges become growth signals. Year 3: Compound effect of continuous updating becomes visible. Year 10: Becomes someone who helps others upgrade — life in positive compounding.'},
+    {t:'恐懼模型 → 創造模型',e:'Fear → Creation',
+     old:{y1:'以避免錯誤為核心，選擇最安全的路，機會不斷流逝。',y3:'越來越保守，創造力萎縮，人生選項越來越少。',y10:'最大的遺憾不是做錯了什麼，而是沒有去試。'},
+     nw:{y1:'開始以好奇心代替恐懼，嘗試創造而不只是保護。',y3:'建立了創作系統，成果開始積累，信心循環形成。',y10:'留下了有意義的創造，人生是一部持續創作的作品。'},
+     en:'Year 1: Curiosity replaces fear. Year 3: A creative system builds, confidence compounds. Year 10: A life of meaningful creation — something is left behind that matters.'},
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">如果維持現在的模型，你的未來會是什麼？<br>
+    <em>What is your future if you keep your current model? What changes if you upgrade?</em>
+    <button class="tts" onclick="speak('The most powerful question you can ask yourself: if I keep my current mental model for one year, three years, ten years — what is the trajectory? And if I upgrade my model starting today — what becomes possible?',this,'INTRO')">🔊 INTRO</button></p>
+  ${SC.map(s=>`<div style="margin-bottom:28px;">
+    <h3 style="color:var(--navy);margin-bottom:14px;">${s.t}</h3>
+    <div class="sim-br">
+      <div class="sb old"><h4>⛓ 維持舊模型</h4>
+        <div class="sy"><div class="sl">1年後</div><div class="st">${s.old.y1}</div></div>
+        <div class="sy"><div class="sl">3年後</div><div class="st">${s.old.y3}</div></div>
+        <div class="sy"><div class="sl">10年後</div><div class="st">${s.old.y10}</div></div>
+      </div>
+      <div class="sb nw"><h4>🚀 更新模型</h4>
+        <div class="sy"><div class="sl">1年後</div><div class="st">${s.nw.y1}</div></div>
+        <div class="sy"><div class="sl">3年後</div><div class="st">${s.nw.y3}</div></div>
+        <div class="sy"><div class="sl">10年後</div><div class="st">${s.nw.y10}</div></div>
+      </div>
+    </div>
+    <button class="tts" style="margin-top:11px;" onclick="speak('${s.e}. Updated model: ${s.en.replace(/'/g,"\\'")}',this,'${s.e}')">🔊 ${s.e}</button>
+  </div>`).join('')}`;
+}
+
+// ── M10 High-Dim Language DB ─────────────────────────────────────
+function m10(){
+  const P=[
+    {lo:'我沒辦法',hi:'我目前還沒找到讓我能做到的方法，我繼續探索',el:"I can't",eh:"I haven't found the best approach yet — I'm still exploring."},
+    {lo:'我失敗了',hi:'我得到了一個讓我更新模型的珍貴數據點',el:'I failed',eh:'I gained a valuable data point that upgrades my model.'},
+    {lo:'別人比我強',hi:'他們的優勢是我可以學習的公開資訊',el:'Others are better than me',eh:'Their strengths are public information I can learn from.'},
+    {lo:'這沒什麼意義',hi:'我還沒找到把這件事連結到我核心目標的方法',el:'This is meaningless',eh:"I haven't found how to connect this to my core purpose yet."},
+    {lo:'我太忙了',hi:'我目前的優先級分配和我的核心目標不一致，需要重新設計',el:"I'm too busy",eh:"I've prioritized other things — I need to redesign my allocation."},
+    {lo:'這不公平',hi:'這個結果和我的期待不符，讓我分析根本原因',el:'This is unfair',eh:"This outcome doesn't match my expectation — let me analyze the root cause."},
+    {lo:'我不夠聰明',hi:'我目前的理解模型還沒達到這個任務的要求，可以更新',el:"I'm not smart enough",eh:"My current model hasn't reached this task's requirements — it can be upgraded."},
+    {lo:'沒有人幫我',hi:'我需要建立更有效的合作系統和支持網路',el:'Nobody helps me',eh:'I need to build a more effective collaboration system and support network.'},
+    {lo:'我已經盡力了',hi:'我用目前的模型達到了它的上限，是時候升級模型了',el:"I've done my best",eh:"I've reached the ceiling of my current model — it's time to upgrade."},
+    {lo:'命就是這樣',hi:'我目前的理解還沒能解釋這個結果背後的因果',el:"That's just my fate",eh:"My current model can't yet explain the cause-and-effect behind this result."},
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">語言是思維的介面。低維語言固化舊模型，高維語言打開新可能。<br>
+    <em>Language is the interface of thought. Low-dimensional language locks in old models; high-dimensional language opens new possibilities.</em>
+    <button class="tts" onclick="speak('Language is the interface of thought. Every low-dimensional sentence locks in a limiting model. Every high-dimensional replacement opens a new possibility space. Practice replacing one sentence at a time.',this,'INTRO')">🔊 INTRO</button></p>
+  ${P.map(p=>`<div class="ex-item">
+    <div class="ex-hd" onclick="tog(this)">
+      <span><span class="bl-lo" style="margin-right:7px;">${p.lo}</span></span>
+      <span class="ex-ar">▶</span>
+    </div>
+    <div class="ex-bd">
+      <div style="margin-bottom:11px;">
+        <div style="font-size:10px;font-weight:700;color:#C62828;margin-bottom:5px;">⛓ 低維語言 LOW-DIM:</div>
+        <div style="color:#C62828;font-size:14px;font-style:italic;">"${p.el}"</div>
+        <button class="tts" style="margin-top:5px;" onclick="speak('${p.el.replace(/'/g,"\\'")}',this,'LOW')">🔊 LOW</button>
+      </div>
+      <div style="border-top:2px dashed var(--gold);margin:11px 0;"></div>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#1B5E20;margin-bottom:5px;">🚀 高維語言 HIGH-DIM:</div>
+        <div style="background:var(--g50);padding:11px;border-radius:8px;font-size:14px;font-weight:600;">${p.hi}</div>
+        <div style="color:#1B5E20;font-size:13px;font-style:italic;margin-top:7px;">"${p.eh}"</div>
+        <button class="tts" style="margin-top:5px;" onclick="speak('${p.eh.replace(/'/g,"\\'")}',this,'HIGH')">🔊 HIGH-DIM</button>
+      </div>
+    </div></div>`).join('')}`;
+}
+
+// ── M11 Wisdom Formulas ──────────────────────────────────────────
+function m11(){
+  const F=[
+    {m:'事件 ≠ 結果',e:'Event ≠ Outcome',
+     zh:'同一個事件，不同的模型產生不同的結果。事件只是輸入，模型決定輸出。',
+     en:'The same event — failure, rejection, loss — produces completely different outcomes depending on the model processing it. Event is input; model is the function; outcome is the output.'},
+    {m:'結果 = 模型 × 行動 × 時間',e:'Result = Model × Action × Time',
+     zh:'錯誤的模型乘上再多的行動，結果都是偏差的。正確的模型加上行動與時間，產生複利。',
+     en:'The wrong model multiplied by more action amplifies the error. The right model, combined with consistent action and time, produces exponential compounding results.'},
+    {m:'情緒 = 預測誤差',e:'Emotion = Prediction Error',
+     zh:'你感到情緒激動，是因為現實和你的預測不符。情緒不是壞事，而是系統更新的信號。',
+     en:'Strong emotions arise when reality doesn\'t match your prediction. The intensity tells you how wrong your model was. Every strong emotion is an invitation to update.'},
+    {m:'痛苦 = 模型失效',e:'Pain = Model Failure',
+     zh:'痛苦不是人生的懲罰，而是你的模型遇到它無法處理的現實。是最昂貴的學費，也是最深的老師。',
+     en:'Pain is not punishment — it is your model encountering a reality it cannot process. It is the most expensive tuition fee for the most important upgrade.'},
+    {m:'焦慮 = 不確定性增加',e:'Anxiety = Increased Uncertainty',
+     zh:'焦慮的本質是預測系統無法對未來形成可靠的預測。減少焦慮靠增加信息，不是增加控制。',
+     en:'Anxiety\'s core is your prediction system failing to form reliable predictions. Reduce anxiety by increasing information and model accuracy, not by increasing control.'},
+    {m:'自由 = 更新能力',e:'Freedom = Updating Capacity',
+     zh:'真正的自由是能夠更新你的模型、改變你的預測、創造新的可能。',
+     en:'You are free to the degree that you can update your own model. The person who cannot update their beliefs is imprisoned by their past predictions, regardless of external circumstances.'},
+    {m:'幸福 = 需求與價值一致',e:'Happiness = Needs–Values Alignment',
+     zh:'幸福不是得到你想要的，而是你正在追求的和你真正珍視的是同一件事。',
+     en:'When what you are pursuing matches what you truly value at the deepest level, effort feels like meaning, not sacrifice.'},
+    {m:'成功 = 價值創造 × 持續更新',e:'Success = Value Creation × Continuous Updating',
+     zh:'成功不是到達一個目的地，而是建立一個持續創造價值並且持續更新自身的系統。',
+     en:'Success is not reaching a destination — it is building a system that continuously creates value and continuously upgrades itself. One without the other stalls.'},
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">人生的數學不複雜，但違反直覺。點擊展開深層解釋。<br>
+    <em>The mathematics of life is not complex, but it is counterintuitive.</em></p>
+  ${F.map(f=>`<div class="ex-item">
+    <div class="ex-hd" onclick="tog(this)">
+      <span style="font-size:16px;font-weight:800;color:var(--gold);">${f.m}</span>
+      <span class="ex-ar">▶</span>
+    </div>
+    <div class="ex-bd">
+      <div class="fcrd"><div class="fm">${f.m}</div>
+        <div class="fe">${f.zh}<br><span style="color:#A8C0D8;font-style:italic;font-size:12px;">${f.en}</span></div>
+      </div>
+      <button class="tts" onclick="speak('${f.e}. ${f.en.replace(/'/g,"\\'")}',this,'${f.e}')">🔊 ${f.e}</button>
+    </div></div>`).join('')}`;
+}
+
+// ── M12 Capability Tree ──────────────────────────────────────────
+function m12(){
+  const C=[
+    {z:'理解能力',e:'Comprehension',i:'🧩',
+     d:'能讀懂一件事背後真正的意思，而不只是表面文字。\nTrain: After every reading ask: "What is this really saying beneath the surface?"'},
+    {z:'抽象能力',e:'Abstraction',i:'🔭',
+     d:'從具體事件中提煉可遷移的原則。\nTrain: "What is the underlying pattern? Does this pattern appear elsewhere in life?"'},
+    {z:'建模能力',e:'Modeling',i:'🗺️',
+     d:'為複雜現實建立簡化但有用的地圖。\nTrain: Explain any new domain using only 3 key variables.'},
+    {z:'推理能力',e:'Reasoning',i:'🔗',
+     d:'從前提推導到結論的嚴密邏輯鏈。\nTrain: For every conclusion ask: "Where does this come from? What are the assumptions? What is the evidence?"'},
+    {z:'決策能力',e:'Decision-Making',i:'⚖️',
+     d:'在不完全信息下做出最優選擇。\nTrain: Before every decision: "What am I maximizing? What are my assumptions? What is the worst case?"'},
+    {z:'控制能力',e:'Self-Regulation',i:'🎯',
+     d:'在強烈情緒中保持清醒和方向。\nTrain: When emotion arises — pause, name it, ask "What prediction error is this signaling?"'},
+    {z:'表達能力',e:'Expression',i:'🗣️',
+     d:'把複雜內在理解轉化為對方能接收的語言。\nTrain: Explain the same concept to very different people in very different ways.'},
+    {z:'更新能力',e:'Updating',i:'🔄',
+     d:'當新信息與原有模型衝突時，快速更新而不是防禦。\nTrain: Weekly — find a belief you\'re certain about and actively seek disconfirmation.'},
+    {z:'合作能力',e:'Collaboration',i:'🤝',
+     d:'讓系統1+1>2的能力。\nTrain: "What is each person\'s strength? How do I design collaboration so each person is in their zone?"'},
+    {z:'創造能力',e:'Creation',i:'✨',
+     d:'從無到有，建立世界上不存在的東西。\nTrain: Daily — "What does the world need that doesn\'t exist yet? Can I create it?"'},
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">10大核心能力，每一項都是可以訓練的肌肉。點擊展開訓練方法。<br>
+    <em>10 core capabilities — every one a trainable muscle. Click to expand training methods.</em>
+    <button class="tts" onclick="speak('Ten core capabilities form the foundation of a high-agency life. Every capability is trainable. The person who develops all ten builds an unbeatable personal operating system.',this,'INTRO')">🔊 INTRO</button></p>
+  <div class="cgrid">${C.map(c=>`
+    <div class="cit" onclick="togC(this)">
+      <div style="font-size:22px;margin-bottom:7px;">${c.i}</div>
+      <div class="cz">${c.z}</div><div class="ce">${c.e}</div>
+      <div class="cd">
+        <p style="white-space:pre-line;font-size:12px;line-height:1.7;">${c.d}</p>
+        <button class="tts" style="margin-top:8px;" onclick="event.stopPropagation();speak('${c.e}. ${c.d.split('\n')[1]?.replace(/'/g,"\\'")||''}',this,'${c.e}')">🔊 ${c.e}</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+// ── M13 Daily Upgrade ────────────────────────────────────────────
+function m13(){
+  const day=new Date().getDay();
+  const DS=[
+    {lo:'我做不到',hi:'我還沒找到讓我能做到的方法',mod:'成長模型',em:'Growth Model',
+     fm:'能力 = 模型 × 練習 × 時間',
+     pr:'任何能力都是可訓練的，差別只是模型對不對、練習夠不夠。',
+     pe:'Any capability is trainable. The only variables are: is the model correct, and is the practice sufficient?',
+     cs:'一位不會說英文的高中生，不是因為沒有語言天份，而是還沒有找到正確的學習模型和足夠的練習量。',
+     tk:'今天找出一件你認為自己做不到的事，寫下3個更好的模型來重新看待它。',
+     te:'Identify one thing you believe you cannot do. Write three better models for why you actually can.'},
+    {lo:'都是他們的錯',hi:'我在這個結果中能控制的因素是什麼',mod:'高Agency模型',em:'High Agency Model',
+     fm:'結果 = 可控因素 × 不可控因素 × 時間',
+     pr:'永遠先找到自己可以控制的變數，然後最大化那個槓桿。',
+     pe:'Always start by identifying the variables you control, then maximize leverage there. Never waste energy where you have none.',
+     cs:'公司裁員（不可控），但我的技能更新速度、人際網路建立（可控）決定了我一年後的位置。',
+     tk:'列出一個讓你困擾的問題，分成「可控」和「不可控」兩欄，只投入能量在可控欄位。',
+     te:'List one troubling problem. Divide into "controllable" and "uncontrollable" columns. Invest energy only in the controllable.'},
+    {lo:'生活就是這樣沒什麼好說的',hi:'這個情況背後有什麼我還沒理解的系統模式',mod:'系統模型',em:'Systems Model',
+     fm:'系統 = 元素 × 連結 × 功能',
+     pr:'表面的問題背後都有系統性的原因。找到系統的結構，才能找到真正的解法。',
+     pe:'Surface problems always have systemic causes. Find the structure of the system to find the real solution, not just the symptom.',
+     cs:'慢性疲勞不只是「睡不好」，而是睡眠、壓力、營養、目標感整個系統的失衡。',
+     tk:'今天選一個反覆出現的問題，畫出它背後可能的系統（至少5個相互影響的因素）。',
+     te:'Choose one recurring problem. Map the system behind it — at least 5 mutually influencing factors.'},
+    {lo:'我不知道這有什麼意義',hi:'我來找它和我核心目標的連結',mod:'創造模型',em:'Creation Model',
+     fm:'意義 = 行動 × 連結 × 貢獻',
+     pr:'意義不是被發現的，是被創造的。當你把任何事情連結到你真正在乎的事，意義就出現了。',
+     pe:'Meaning is not found — it is created. Connect any action to what you truly care about, and meaning appears.',
+     cs:'每天備課可能感覺機械，但當你看見它如何打開學生的視野，意義就從那個連結中誕生。',
+     tk:'今天列出3件你在做但感覺沒意義的事，為每一件找到它和你核心價值的直接連結。',
+     te:'List 3 things you do that feel meaningless. For each, find a direct link to your core value.'},
+    {lo:'我太老了學不來了',hi:'大腦的神經可塑性持續到生命最後一天',mod:'神經可塑性模型',em:'Neuroplasticity Model',
+     fm:'學習 = 重複 × 回饋 × 間隔',
+     pr:'年齡不是學習的障礙，無效的學習方法才是。正確的方法讓學習在任何年齡都高效。',
+     pe:'Age is not a barrier to learning — ineffective methods are. The right method makes learning efficient at any age without exception.',
+     cs:'神經科學研究顯示，持續學習者的大腦神經連結密度明顯高於同齡停止學習者。',
+     tk:'今天學一件你一直認為「太難了」的事，只練習15分鐘，記錄你的進度。',
+     te:"Today, practice something you've always thought was too hard. Just 15 minutes. Record your progress."},
+    {lo:'錢不是最重要的',hi:'金錢是我創造的價值的流動表現，讓我聚焦創造更大的價值',mod:'價值創造模型',em:'Value Creation Model',
+     fm:'財富 = 獨特價值 × 觸及範圍 × 持續性',
+     pr:'批評金錢不會增加你的財富。理解金錢是能量和價值的語言，讓你更有效地服務世界。',
+     pe:'Criticizing money never increases wealth. Understanding money as the language of value lets you serve the world more effectively.',
+     cs:'一位健康知識創作者，當她意識到自己的知識可以幫助數千人而不只是眼前的學生，財富觀就改變了。',
+     tk:'今天問自己：我的獨特知識或技能，如何觸及更多的人？寫下一個擴大影響力的具體方案。',
+     te:'How can my unique knowledge reach more people? Write one concrete plan to expand your impact this week.'},
+    {lo:'我沒有時間',hi:'我目前的優先級分配和核心目標不一致，讓我重新設計',mod:'系統設計模型',em:'System Design Model',
+     fm:'時間效能 = 高價值活動時間 ÷ 總時間',
+     pr:'時間不是被管理的，是被設計的。你的行事曆是你真實優先級的鏡子。',
+     pe:"Time is not managed — it is designed. Your calendar is a mirror of your real priorities, not your hoped-for priorities.",
+     cs:'一位老師說沒時間學習新方法，但她的行事曆顯示每天2小時在低價值活動。時間不是問題，設計才是。',
+     tk:'今天看你的行事曆，把每一個活動標記為「高價值」或「低價值」，然後設計一個更好的分配。',
+     te:'Look at your calendar. Mark each activity "high-value" or "low-value." Then design a better allocation.'},
+  ];
+  const s=DS[day];
+  return `
+  <div class="dcrd">
+    <div class="dl">今日升維練習 TODAY'S UPGRADE — ${['SUN','MON','TUE','WED','THU','FRI','SAT'][day]}</div>
+    <div class="dz">低維：「${s.lo}」</div>
+    <div class="dz" style="margin-top:7px;">高維：「${s.hi}」</div>
+    <button class="tts" style="margin-top:14px;" onclick="speak('Today low-dimensional: ${s.lo}. Upgraded version: ${s.hi}',this,'TODAY')">🔊 TODAY</button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
+    <div class="ex-item"><div class="ex-hd" onclick="tog(this)">世界模型 <span class="ex-ar">▶</span></div>
+      <div class="ex-bd"><p><strong>${s.mod}</strong></p><p style="font-style:italic;color:var(--teal);font-size:13px;">${s.em}</p>
+        <button class="tts" style="margin-top:7px;" onclick="speak('Today model: ${s.em}. ${s.pe.replace(/'/g,"\\'")}',this,'MODEL')">🔊 MODEL</button></div></div>
+    <div class="ex-item"><div class="ex-hd" onclick="tog(this)">人生公式 <span class="ex-ar">▶</span></div>
+      <div class="ex-bd"><p style="font-size:17px;font-weight:800;color:var(--gold);">${s.fm}</p></div></div>
+  </div>
+  <div class="ex-item"><div class="ex-hd" onclick="tog(this)">第一性原理 First Principle <span class="ex-ar">▶</span></div>
+    <div class="ex-bd"><p style="font-size:14px;">${s.pr}</p>
+      <p style="font-style:italic;color:var(--teal);margin-top:7px;font-size:13px;">${s.pe}</p>
+      <button class="tts" style="margin-top:7px;" onclick="speak('${s.pe.replace(/'/g,"\\'")}',this,'PRINCIPLE')">🔊 PRINCIPLE</button></div></div>
+  <div class="ex-item"><div class="ex-hd" onclick="tog(this)">生活案例 Life Example <span class="ex-ar">▶</span></div>
+    <div class="ex-bd"><p style="font-size:13px;line-height:1.7;">${s.cs}</p></div></div>
+  <div style="background:var(--navy);color:#fff;border-radius:12px;padding:20px;margin-top:18px;">
+    <div style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:3px;margin-bottom:11px;">今日任務 TODAY'S ACTION</div>
+    <p style="font-size:14px;line-height:1.7;">${s.tk}</p>
+    <p style="font-style:italic;color:#A8C0D8;margin-top:9px;font-size:13px;">${s.te}</p>
+    <button class="tts" style="margin-top:11px;" onclick="speak('${s.te.replace(/'/g,"\\'")}',this,'ACTION')">🔊 ACTION</button>
+  </div>`;
+}
+
+// ── M14 Knowledge Graph ──────────────────────────────────────────
+function m14(){
+  const N=[
+    {z:'情緒',e:'Emotion',lk:['健康','信念','預測','需求','婚姻']},
+    {z:'健康',e:'Health',lk:['情緒','睡眠','信念','系統','壓力']},
+    {z:'金錢',e:'Money',lk:['價值','信念','系統','創造','教育']},
+    {z:'教育',e:'Education',lk:['能力','模型','信念','AI','創業']},
+    {z:'信仰',e:'Faith',lk:['意義','價值','創造','情緒','親子']},
+    {z:'AI',e:'AI',lk:['預測','系統','能力','創造','教育']},
+    {z:'婚姻',e:'Marriage',lk:['情緒','需求','溝通','信念','親子']},
+    {z:'創業',e:'Business',lk:['價值','系統','AI','金錢','創造']},
+    {z:'親子',e:'Parenting',lk:['信念','情緒','教育','溝通','健康']},
+    {z:'意義',e:'Meaning',lk:['信仰','創造','價值','行動','情緒']},
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">人生所有重要概念都相互連結。沒有孤立的問題，只有系統性的模式。<br>
+    <em>All important life concepts are deeply interconnected. No isolated problems — only systemic patterns.</em>
+    <button class="tts" onclick="speak('All important life concepts are deeply interconnected. What affects your emotions affects your health, which affects your relationships, which affects your beliefs, which affects your financial outcomes. There are no isolated problems — only systemic patterns waiting to be understood and upgraded.',this,'INTRO')">🔊 INTRO</button></p>
+  <div class="wgrid">${N.map(n=>`
+    <div class="wc" style="background:var(--g50);" onclick="togC(this)">
+      <div class="wz" style="font-size:22px;">${n.z}</div><div class="we">${n.e}</div>
+      <div class="wd">
+        <p style="font-size:12px;color:var(--g500);margin-bottom:9px;">連結至 / Connected to:</p>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;">${n.lk.map(l=>`<span style="background:var(--teal);color:#fff;padding:3px 11px;border-radius:20px;font-size:11px;">${l}</span>`).join('')}</div>
+        <button class="tts" style="margin-top:11px;" onclick="event.stopPropagation();speak('${n.e} is connected to: ${n.lk.join(', ')}.',this,'${n.e}')">🔊 ${n.e}</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+// ── M15 Knowledge → Ability ──────────────────────────────────────
+function m15(){
+  const L=[
+    {n:1,z:'知道',e:'Know',d:'聽說過、看過一次',ed:"You've heard of it. You've read it once. This is not ability — it is awareness."},
+    {n:2,z:'理解',e:'Understand',d:'能用自己的話解釋',ed:'You can explain it in your own words. Still not ability — it is comprehension.'},
+    {n:3,z:'模仿',e:'Imitate',d:'照著範例做一次',ed:'You can replicate it following a model. The first real step toward doing.'},
+    {n:4,z:'練習',e:'Practice',d:'刻意反覆練習',ed:'You engage in deliberate, repetitive practice with clear intention.'},
+    {n:5,z:'回饋',e:'Receive Feedback',d:'從環境或他人獲得回饋',ed:'You receive feedback from the environment or others and it registers.'},
+    {n:6,z:'修正',e:'Correct',d:'根據回饋調整做法',ed:'You adjust your approach based on feedback. The loop is closing.'},
+    {n:7,z:'內化',e:'Internalize',d:'不需要刻意想，自然會做',ed:'It happens naturally without deliberate thought. This is real ability beginning.'},
+    {n:8,z:'自動化',e:'Automate',d:'成為肌肉記憶和習慣',ed:'It becomes muscle memory and automatic habit. Your system runs it without friction.'},
+    {n:9,z:'教別人',e:'Teach Others',d:'能把能力傳遞給他人',ed:'You can transfer the capability to others. Teaching reveals what you truly know.'},
+    {n:10,z:'建立自己的模型',e:'Build Your Own Model',d:'創造出獨特的個人版本',ed:'You create your own unique version — this is mastery. The model is now yours.'},
+  ];
+  const cols=['#FFCDD2','#FFCDD2','#FFE0B2','#FFE0B2','#FFE0B2','#C8E6C9','#C8E6C9','#A5D6A7','#81C784','#66BB6A'];
+  return `<p style="color:var(--g500);margin-bottom:18px;">知道不等於能力。從「知道」到「建立自己的模型」需要10個階段。<br>
+    <em>Knowing is not ability. It takes 10 stages to go from knowing to building your own model.</em>
+    <button class="tts" onclick="speak('Knowing is not ability. The most dangerous position in learning is when you know something but cannot do it. It takes ten stages to move from knowledge to genuine capability. Most people stop at stage two — understanding. True mastery begins at stage seven.',this,'INTRO')">🔊 INTRO</button></p>
+  <div class="fst">${L.map((s,i)=>`
+    <div class="fst-row">
+      <div class="fst-line"><div class="fdot" style="background:${cols[i]};color:var(--navy);">${s.n}</div>${i<L.length-1?'<div class="fcon"></div>':''}</div>
+      <div class="fcnt">
+        <strong>${s.z} <span style="color:var(--teal);font-size:12px;font-weight:400;">${s.e}</span></strong>
+        <p>${s.d}</p>
+        <p style="font-style:italic;color:var(--teal);font-size:12px;">${s.ed}</p>
+        <button class="tts" style="margin-top:5px;" onclick="speak('Stage ${s.n}: ${s.e}. ${s.ed.replace(/'/g,"\\'")}',this,'${s.e}')">🔊 ${s.e}</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+// ── M16 Evidence & Reasoning ─────────────────────────────────────
+function m16(){
+  const T=[
+    {z:'客觀事實',e:'Objective Fact',i:'📊',c:'#E8F5E9',
+     d:'可以被多方獨立驗證的陳述。不依賴觀察者立場。',
+     ed:"Statements independently verifiable by multiple parties. Does not depend on the observer's perspective.",
+     ex:'台灣2024年GDP是X兆美元。（可查）',ex_e:"Taiwan's 2024 GDP was X trillion dollars. (Verifiable)",
+     t:'可以用數據、觀察、實驗來驗證嗎？',te:'Can it be verified with data, observation, or experiment?'},
+    {z:'推論',e:'Inference',i:'🔗',c:'#E3F2FD',
+     d:'從已知事實出發，用邏輯推導的結論。可能對，但需要標明是推論。',
+     ed:'A conclusion drawn from known facts through logic. May be correct, but must be labeled as inference, not fact.',
+     ex:'因為他沒有回訊息，所以他在生氣。（推論）',ex_e:'"He must be angry because he didn\'t reply." (Inference — many other explanations exist)',
+     t:'這個結論是從事實推導的，還是直接跳到的？',te:'Is this derived from facts through logic, or jumped to directly?'},
+    {z:'假設',e:'Assumption',i:'🎭',c:'#FFF3E0',
+     d:'沒有被驗證的前提，但被當作已知事實在使用。問題是不知道自己在假設。',
+     ed:'An unverified premise treated as known fact. Assumptions are not the problem — not knowing you are assuming is.',
+     ex:'所有學生都不喜歡學英文。（未驗證）',ex_e:'"All students hate English." (Unverified assumption — never checked)',
+     t:'這個說法被驗證過嗎？還是我默認它是真的？',te:'Has this been verified, or am I defaulting to it as true without evidence?'},
+    {z:'價值判斷',e:'Value Judgment',i:'⚖️',c:'#FCE4EC',
+     d:'反映說話者個人價值觀的評估。不一定對或錯，但不是客觀事實。',
+     ed:"An evaluation reflecting the speaker's personal values. Not necessarily right or wrong — but not an objective fact.",
+     ex:'這樣做是錯的。（誰的標準？）',ex_e:'"This is wrong." (Whose standard? Not universally verifiable)',
+     t:'這個判斷在所有文化、所有時代都成立嗎？',te:'Does this judgment hold across all cultures, all contexts, all eras?'},
+    {z:'需要更多證據',e:'Needs More Evidence',i:'🔍',c:'#F3E5F5',
+     d:'目前信息不足以做出可靠判斷。承認不確定性是高維思維的標誌。',
+     ed:'Insufficient information to make a reliable judgment. Honestly acknowledging uncertainty is a hallmark of high-dimensional thinking.',
+     ex:'這個方法有沒有效，我還需要更多數據。',ex_e:'"Whether this method works — I need more data before concluding."',
+     t:'我有足夠的信息做出這個判斷嗎？',te:'Do I actually have enough information to make this judgment reliably?'},
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">高維思維的標誌：清楚知道自己說的每一句話是哪一種類型。<br>
+    <em>High-dimensional thinking: knowing exactly what type every sentence you say belongs to.</em>
+    <button class="tts" onclick="speak('High-dimensional thinking requires knowing exactly what type every sentence is: objective fact, inference, assumption, value judgment, or a statement that needs more evidence. Mixing these up is how intelligent people make the worst mistakes.',this,'INTRO')">🔊 INTRO</button></p>
+  ${T.map(t=>`<div class="ex-item">
+    <div class="ex-hd" onclick="tog(this)">
+      <span>${t.i} ${t.z} <span style="font-style:italic;font-size:12px;color:var(--teal);">${t.e}</span></span>
+      <span class="ex-ar">▶</span>
+    </div>
+    <div class="ex-bd" style="background:${t.c}30;">
+      <p style="font-size:14px;">${t.d}</p>
+      <p style="font-style:italic;color:var(--teal);margin:7px 0 5px;font-size:13px;">${t.ed}</p>
+      <button class="tts" onclick="speak('${t.e}. ${t.ed.replace(/'/g,"\\'")}',this,'${t.e}')">🔊 ${t.e}</button>
+      <div style="background:#fff;border-radius:8px;padding:13px;margin-top:11px;">
+        <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:5px;">範例 / Example:</div>
+        <p style="font-size:13px;">${t.ex}</p>
+        <p style="font-size:12px;font-style:italic;color:var(--g500);">${t.ex_e}</p>
+        <button class="tts" style="margin-top:5px;" onclick="speak('Example: ${t.ex_e.replace(/'/g,"\\'")}',this,'EX')">🔊 EXAMPLE</button>
+      </div>
+      <div style="background:var(--navy);border-radius:8px;padding:13px;margin-top:9px;color:#fff;">
+        <div style="font-size:10px;font-weight:700;color:var(--gold);margin-bottom:5px;">自我測試 / Self-Test:</div>
+        <p style="font-size:13px;">${t.t}</p>
+        <p style="font-size:12px;font-style:italic;color:#A8C0D8;">${t.te}</p>
+        <button class="tts" style="margin-top:5px;" onclick="speak('Self-test: ${t.te.replace(/'/g,"\\'")}',this,'TEST')">🔊 TEST</button>
+      </div>
+    </div></div>`).join('')}`;
+}
+
+// ── M17 Language Microscope ──────────────────────────────────────
+function m17(){
+  const N=[
+    '語意結構 Semantic Structure','情緒訊號 Emotional Signal','需求層次 Need Hierarchy',
+    '身份認同 Identity Assumption','預設假設 Hidden Premise','因果模型 Causal Model',
+    '預測模型 Predictive Model','價值排序 Value Hierarchy','控制點 Locus of Control',
+    '世界模型 World Model Type','時間視野 Time Horizon','自我效能感 Self-Efficacy',
+    '認知偏誤 Cognitive Bias','損失規避 Loss Aversion','確認偏誤 Confirmation Bias',
+    '系統層級 System Level','能量狀態 Energy State','信念來源 Belief Origin',
+    '社會比較 Social Comparison','歸因風格 Attribution Style','可控性評估 Controllability',
+    '可變性評估 Changeability','情境依賴 Context Dependency','普遍化程度 Overgeneralization',
+    '成長空間 Growth Room','主動性 Agency Level','阻力類型 Resistance Type',
+    '動機類型 Motivation Type','資源視角 Resource Perspective','時態 Tense Focus',
+    '語氣強度 Declarative Strength','可驗假說 Testable Hypothesis','更新阻力 Updating Resistance',
+    '新模型 Upgraded Model','槓桿點 Leverage Point','系統瓶頸 System Bottleneck',
+    '行動觸發 Action Trigger','遷移潛力 Transfer Potential','能力邊界 Capability Boundary',
+    '創造空間 Creative Space','合作潛力 Collaboration Potential','教育潛力 Educational Potential',
+    '健康連結 Health Connection','財富連結 Wealth Connection','關係連結 Relationship Connection',
+    '意義連結 Meaning Connection','AI視角 AI Reframe','第一性原理 First Principles',
+    '高維語言版本 High-Dim Version','今日行動 Today\'s Action'
+  ];
+  return `<p style="color:var(--g500);margin-bottom:18px;">把任何一句話拆解成50個認知節點，從「語言工具」升維成「認知作業系統」。<br>
+    <em>Decompose any sentence into 50 cognitive nodes — upgrading from language tool to Cognitive Operating System.</em>
+    <button class="tts" onclick="speak('The Language Microscope decomposes any sentence into fifty cognitive nodes. This is not just rewriting words — it is a full cognitive audit of the brain that produced the sentence, and a complete upgrade protocol.',this,'INTRO')">🔊 INTRO</button></p>
+  <div class="ai-box">
+    <label>輸入一句話進行50節點顯微分析 / Enter a sentence for 50-node analysis:</label>
+    <textarea id="m17i" placeholder="例：我不知道自己適合做什麼。"></textarea>
+    <button class="ai-btn" onclick="rm17()">🔬 50節點顯微分析 MICROSCOPE</button>
+  </div>
+  <div class="ai-res" id="m17r"></div>
+  <h3 style="margin:24px 0 13px;color:var(--navy);">50個認知節點</h3>
+  <div class="mgnd">${N.map((n,i)=>{
+    const[zh,en]=n.split(' ');
+    return `<div class="mn">
+      <div class="ml">NODE ${String(i+1).padStart(2,'0')}</div>
+      <div class="mz">${zh}</div>
+      <div class="me">${en||''}</div>
+      <button class="tts" style="margin-top:7px;" onclick="speak('Node ${i+1}: ${en||zh}',this,'N${i+1}')">🔊 N${i+1}</button>
+    </div>`;}).join('')}</div>`;
+}
+function rm17(){const v=document.getElementById('m17i').value.trim();if(!v)return alert('請輸入');
+  aiCall(`Language Microscope AI. Analyze through the 15 most important cognitive nodes. Format each as:
+【NODE XX — Chinese name / English name】
+Analysis: 2-3 sentences in Traditional Chinese
+Insight: 1 English sentence
+
+After all nodes provide:
+🎯 HIGH-DIM UPGRADE: Rewritten sentence in Chinese
+💡 ENGLISH CORE: One powerful English sentence
+📋 TODAY'S ACTION: Concrete action in Chinese + English
+
+Be precise and deeply analytical.`,`顯微分析：「${v}」`,'m17r','🔬 顯微分析中 MICROSCOPING...');}
+
+// ── INIT ────────────────────────────────────────────────────────
+renderGrid();
+</script>
+</body>
+</html>
